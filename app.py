@@ -21,7 +21,7 @@ def home():
     try:
         return render_template('home.html')
     except FileExistsError as e:
-        logging.error('file is not present in our directory')
+        logging.error(f'file is not present in our directory {e}')
     
 @app.route('/result',methods=['POST'])
 def dashboard():
@@ -32,7 +32,6 @@ def dashboard():
             a = []
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"}
             response = f"https://www.google.com/search?q={query}&tbm=isch"
-
             reql = requests.get(response, headers=headers)
             html_data = bs(reql.content, 'html.parser')
             image_data = html_data.find_all('img')
@@ -47,11 +46,11 @@ def dashboard():
                             f.write(img_response.content)
                         a.append(f"{query}_{index}.jpg")
                     else:
-                        print(f"Failed to download the image from '{img_url}'")
+                        logging.error(f"Failed to download the image from '{img_url}'")
 
             return render_template('results.html')
     except Exception as e:
-        print(e)
+        logging.error(f'this is my request error {e}')
     return render_template('results.html')
         
     
